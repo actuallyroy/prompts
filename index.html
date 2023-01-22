@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" />
+    <title>Document</title>
+    <style>
+      body {
+        width: fit-content;
+      }
+      * {
+        font-family: Futura;
+      }
+      .title {
+        text-align: center;
+        font-weight: 800;
+        font-size: 18px;
+      }
+      .tags-cont {
+        display: inline-block;
+        width: fit-content;
+      }
+      .tag {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 100px;
+        margin: 5px;
+        cursor: pointer;
+        box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.25);
+      }
+      .active-tag {
+        outline: 1px solid #000;
+      }
+      .prompt {
+        display: inline-flex;
+        width: 94%;
+        font-weight: 800;
+        font-size: 18px;
+        margin: 10px 0;
+        padding: 15px;
+        background-color: rgb(203, 203, 203);
+        text-align: center;
+      }
+      .prompt span {
+        margin: auto;
+        font-size: small;
+      }
+      .prompt i {
+        cursor: pointer;
+      }
+      .pagination {
+        display: flex;
+        justify-content: center;
+      }
+      .dots {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+
+        outline: 1px solid black;
+        margin: 0 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="title">What would you like to share?</div>
+      <div class="tags-cont" id="tags-cont"></div>
+      <div class="propmts-cont">
+        <div class="prompt">
+          <i id="left-btn" class="bi bi-chevron-compact-left"></i>
+          <span class="prompt-span"></span>
+          <i id="right-btn" class="bi bi-chevron-compact-right"></i>
+        </div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+    <script type="module">
+      let currentSelectedTag = "";
+      let currentSelectedTagIndex = 0;
+      let pagination = document.getElementById("pagination");
+      let data = {
+        tags: {
+          Thanks: {
+            color: "#fff597",
+            prompts: [
+              "The everyday little things that I appreciate with you",
+              "The things that you do, that make me happy that I know you!",
+              "Thank you for being who you are",
+              "Thank you for putting up with me despite",
+              "Thank you for coming into my life",
+            ],
+            form: {
+              num_of_maps_text: "Were you both at the same place? or did this happen online?",
+              date_text: "Do you remember when when? It's okay if you don't (Optional)",
+              description_text: "What made this special?",
+              description_placeholder: "We didn't realise how special this would be ..",
+              title_text: "What could you add that would remind them of this?",
+              location_1_text: "Where were you?",
+            },
+          },
+          "Inside joke": {
+            color: "#caffca",
+            prompts: [
+              "Think of a funny line they said that lives rent free with you in your head",
+              "Could you BE any funnier?",
+              "What's the funniest thing you've ever done together?",
+            ],
+            form: {
+              num_of_maps_text: "Were you both at the same place? or did this happen online?",
+              date_text: "Do you remember when when? It's okay if you don't (Optional)",
+              description_text: "What made this special?",
+              description_placeholder: "We didn't realise how special this would be ..",
+              title_text: "What could you add that would remind them of this?",
+              location_1_text: "Where were you?",
+            },
+          },
+          Memory: {
+            color: "#ff9f9f",
+            prompts: [
+              "What's the first thing you remember about them?",
+              "Where were we when you laughed the loudest?",
+              "I loved when we were at...",
+              "Where were we when we had our first ...",
+              "I miss when we went to...",
+              "I still remember where we were when you...",
+              "I still remember your smile when we were at..",
+              "Do you remember when we were at..?"
+            ],
+            form: {
+              num_of_maps_text: "Were you both at the same place? or did this happen online?",
+              date_text: "Do you remember when when? It's okay if you don't (Optional)",
+              description_text: "What made this special?",
+              description_placeholder: "We didn't realise how special this would be ..",
+              title_text: "What could you add that would remind them of this?",
+              location_1_text: "Where were you?",
+            },
+          },
+          Promise: {
+            color: "#fdffe9",
+            prompts: [
+              "6 months from now, here’s what I hope we’ll do",
+              "I promise to always be there for you",
+              "1 year from now, this is a promise I’m making",
+              "A trip that I promise we’re making soon"
+            ],
+            form: {
+              num_of_maps_text: "Were you both at the same place? or did this happen online?",
+              date_text: "Do you remember when when? It's okay if you don't (Optional)",
+              description_text: "What made this special?",
+              description_placeholder: "We didn't realise how special this would be ..",
+              title_text: "What could you add that would remind them of this?",
+              location_1_text: "Where were you?",
+            },
+          },
+          Quote: {
+            color: "#d6d6d6",
+            prompts: [
+              "A great friend once said...",
+              "This line helped me get through really hard times",
+              "And then you said...",
+              "Remember when you said..."
+            ],
+            form: {
+              num_of_maps_text: "Were you both at the same place? or did this happen online?",
+              date_text: "Do you remember when when? It's okay if you don't (Optional)",
+              description_text: "What made this special?",
+              description_placeholder: "We didn't realise how special this would be ..",
+              title_text: "What could you add that would remind them of this?",
+              location_1_text: "Where were you?",
+            },
+          },
+          Feelings: {
+            color: "#abcaff",
+            prompts: [
+              "We have the best time when",
+              "When I’m with you I feel...",
+              "Even at my worst, you make me feel...",
+              "Distance is hard, but you make it feel..."
+            ],
+            form: {
+              num_of_maps_text: "Were you both at the same place? or did this happen online?",
+              date_text: "Do you remember when when? It's okay if you don't (Optional)",
+              description_text: "What made this special?",
+              description_placeholder: "We didn't realise how special this would be ..",
+              title_text: "What could you add that would remind them of this?",
+              location_1_text: "Where were you?",
+            },
+          },
+        },
+      };
+      let tagCont = document.getElementById("tags-cont");
+      Object.keys(data.tags).forEach((tag) => {
+        let tagEl = document.createElement("span");
+        tagEl.classList.add("tag");
+        tagEl.style.backgroundColor = data.tags[tag].color;
+        tagEl.innerText = tag;
+        tagEl.addEventListener("click", () => {
+          let activeTag = document.querySelector(".active-tag");
+          if (activeTag) {
+            activeTag.classList.remove("active-tag");
+          }
+          tagEl.classList.add("active-tag");
+          currentSelectedTag = tag;
+          currentSelectedTagIndex = 0;
+          document.querySelector(".prompt-span").innerText = data.tags[tag].prompts[0];
+          pagination.innerHTML = "";
+          for (let i = 0; i < data.tags[tag].prompts.length; i++) {
+            let dot = document.createElement("span");
+            dot.classList.add("dots");
+            pagination.appendChild(dot);
+          }
+          document.querySelectorAll(".dots")[0].style.backgroundColor = "black";
+        });
+        tagCont.appendChild(tagEl);
+      });
+
+      let leftBtn = document.getElementById("left-btn");
+      let rightBtn = document.getElementById("right-btn");
+
+      leftBtn.addEventListener("click", () => {
+        if (currentSelectedTagIndex > 0) {
+          currentSelectedTagIndex--;
+          document.querySelector(".prompt-span").innerText = data.tags[currentSelectedTag].prompts[currentSelectedTagIndex];
+          document.querySelectorAll(".dots")[currentSelectedTagIndex + 1].style.backgroundColor = "white";
+          document.querySelectorAll(".dots")[currentSelectedTagIndex].style.backgroundColor = "black";
+        }
+      });
+
+      rightBtn.addEventListener("click", () => {
+        if (currentSelectedTagIndex < data.tags[currentSelectedTag].prompts.length - 1) {
+          currentSelectedTagIndex++;
+          document.querySelector(".prompt-span").innerText = data.tags[currentSelectedTag].prompts[currentSelectedTagIndex];
+          document.querySelectorAll(".dots")[currentSelectedTagIndex - 1].style.backgroundColor = "white";
+          document.querySelectorAll(".dots")[currentSelectedTagIndex].style.backgroundColor = "black";
+        }
+      });
+    </script>
+  </body>
+</html>
